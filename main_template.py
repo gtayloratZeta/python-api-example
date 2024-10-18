@@ -8,29 +8,22 @@ swagger = Swagger(app)
 
 class UppercaseText(Resource):
 
+    """
+    Handles HTTP GET requests to convert input text to uppercase. It retrieves
+    text from the request arguments, converts it to uppercase using the `upper()`
+    method, and returns the result as a JSON response.
+
+    """
     def get(self):
         """
-        This method responds to the GET request for this endpoint and returns the data in uppercase.
-        ---
-        tags:
-        - Text Processing
-        parameters:
-            - name: text
-              in: query
-              type: string
-              required: true
-              description: The text to be converted to uppercase
-        responses:
-            200:
-                description: A successful GET request
-                content:
-                    application/json:
-                      schema:
-                        type: object
-                        properties:
-                            text:
-                                type: string
-                                description: The text in uppercase
+        Handles HTTP GET requests by retrieving a query parameter named 'text'
+        from the request arguments. It then converts the retrieved text to uppercase
+        and returns it as a JSON response.
+
+        Returns:
+            Dict[str,str]: Converted to a JSON response containing a dictionary
+            with a single key-value pair: "text" and the input string in uppercase.
+
         """
         text = request.args.get('text')
 
