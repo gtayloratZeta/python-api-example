@@ -9,70 +9,41 @@ api = Api(app)
 swagger = Swagger(app)
 
 class UppercaseText(Resource):
+    """
+    Handles HTTP GET requests by converting text input to uppercase and returning
+    it in JSON format.
+
+    """
     def get(self):
         """
-        This method responds to the GET request for this endpoint and returns the data in uppercase.
-        ---
-        tags:
-        - Text Processing
-        parameters:
-            - name: text
-              in: query
-              type: string
-              required: true
-              description: The text to be converted to uppercase
-        responses:
-            200:
-                description: A successful GET request
-                content:
-                    application/json:
-                      schema:
-                        type: object
-                        properties:
-                            text:
-                                type: string
-                                description: The text in uppercase
+        Handles HTTP GET requests by retrieving a 'text' parameter from the request
+        query string, converting it to uppercase, and returning it as a JSON response.
+
+        Returns:
+            Dict[str,str]: Converted to a JSON response.
+
         """
         text = request.args.get('text')
 
         return jsonify({"text": text.upper()})
     
 class Records(Resource):
+    """
+    Handles HTTP GET requests to retrieve a list of books from a database. It
+    accepts optional query parameters 'count' and 'sort', allowing users to customize
+    the number of books returned and their sorting order.
+
+    """
     def get(self):
         """
-        This method responds to the GET request for returning a number of books.
-        ---
-        tags:
-        - Records
-        parameters:
-            - name: count
-              in: query
-              type: integer
-              required: false
-              description: The number of books to return
-            - name: sort
-              in: query
-              type: string
-              enum: ['ASC', 'DESC']
-              required: false
-              description: Sort order for the books
-        responses:
-            200:
-                description: A successful GET request
-                schema:
-                    type: object
-                    properties:
-                        books:
-                            type: array
-                            items:
-                                type: object
-                                properties:
-                                    title:
-                                        type: string
-                                        description: The title of the book
-                                    author:
-                                        type: string
-                                        description: The author of the book
+        Handles HTTP GET requests to retrieve a list of book records. It accepts
+        optional query parameters 'count' and 'sort', which determine the number
+        of records returned and the sorting order, respectively.
+
+        Returns:
+            Dict[str,Any]: A dictionary containing a key "books" with a value of
+            type List[Any] which is a list of books and a status code 200.
+
         """
 
         count = request.args.get('count')  # Default to returning 10 books if count is not provided
@@ -84,33 +55,22 @@ class Records(Resource):
         return {"books": books}, 200
     
 class AddRecord(Resource):
+    """
+    Handles HTTP POST requests to add a new record to a database table. It expects
+    a JSON body containing 'Book' and 'Rating' fields. If valid, it calls the
+    `add_record` function to add the record, returning success or failure messages
+    accordingly.
+
+    """
     def post(self):
         """
-        This method responds to the POST request for adding a new record to the DB table.
-        ---
-        tags:
-        - Records
-        parameters:
-            - in: body
-              name: body
-              required: true
-              schema:
-                id: BookReview
-                required:
-                  - Book
-                  - Rating
-                properties:
-                  Book:
-                    type: string
-                    description: the name of the book
-                  Rating:
-                    type: integer
-                    description: the rating of the book (1-10)
-        responses:
-            200:
-                description: A successful POST request
-            400: 
-                description: Bad request, missing 'Book' or 'Rating' in the request body
+        Handles HTTP POST requests to add a new record to the database. It expects
+        the request body to contain 'Book' and 'Rating' keys, validates their
+        presence, and calls the `add_record` function to add the record.
+
+        Returns:
+            Dict[str,int|str]: A dictionary containing a message and a status code.
+
         """
 
         data = request.json
